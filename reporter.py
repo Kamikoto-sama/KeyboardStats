@@ -18,6 +18,7 @@ class Reporter(Thread):
         self.queue = Queue()
         self.chords_stat = dict()
         self.timer = threading.Timer(self.save_delay, self.save)
+        self.stat_dt = datetime.date.today()
 
     def report(self, keys: list[str]):
         self.queue.put(keys)
@@ -46,6 +47,7 @@ class Reporter(Thread):
                 self.chords_stat = json.loads(data)
 
     def save(self):
+        self.reset_stats()
         self.chords_stat["$ts"] = f"{datetime.datetime.now().time()}"
         try:
             with open(self.get_filename(), "w") as f:
@@ -55,6 +57,13 @@ class Reporter(Thread):
             self.log.error(e)
         self.timer = threading.Timer(self.save_delay, self.save)
         self.timer.start()
+
+    def reset_stats(self):
+        today = datetime.date.today()
+        if self.stat_dt == today:
+            return
+        self.chords_stat = dict()
+        self.stat_dt = today
 
     def get_filename(self):
         return os.path.join(self.base_path, f"{datetime.date.today()}.json")
