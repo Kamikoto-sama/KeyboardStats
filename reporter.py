@@ -28,12 +28,15 @@ class Reporter(Thread):
         self.try_load()
         self.timer.start()
         while not self.stopping:
-            keys = self.queue.get()
-            chord = "+".join([k.replace(" ", "_") for k in keys])
-            if chord not in self.chords_stat:
-                self.chords_stat[chord] = 1
-            else:
-                self.chords_stat[chord] += 1
+            try:
+                keys = self.queue.get()
+                chord = "+".join([k.replace(" ", "_") for k in keys])
+                if chord not in self.chords_stat:
+                    self.chords_stat[chord] = 1
+                else:
+                    self.chords_stat[chord] += 1
+            except Exception as e:
+                self.log.error(e)
 
     def stop(self):
         self.stopping = True

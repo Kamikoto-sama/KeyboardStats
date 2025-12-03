@@ -10,10 +10,10 @@ def stop(*args):
     exit(0)
 
 
-log = configure_logging()
+logger = configure_logging()
 os.makedirs("reports", exist_ok=True)
-reporter = Reporter("reports", log)
-handler = Handler(reporter)
+reporter = Reporter("reports", logger)
+handler = Handler(reporter, logger)
 signal.signal(signal.SIGINT, stop)
 signal.signal(signal.SIGTERM, stop)
 reporter.start()
