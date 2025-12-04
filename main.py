@@ -11,6 +11,7 @@ def stop(*args):
 
 
 logger = configure_logging()
+logger.info("\n[Start of logging]\n")
 os.makedirs("reports", exist_ok=True)
 reporter = Reporter("reports", logger)
 handler = Handler(reporter, logger)
