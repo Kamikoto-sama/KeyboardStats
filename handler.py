@@ -1,4 +1,5 @@
 ﻿from logging import Logger
+import threading
 
 import keyboard as kb
 
@@ -14,6 +15,7 @@ class Handler:
         self.log = log
         self.reporter = reporter
 
+
     def handle(self, event: kb.KeyboardEvent):
         event_name = event.name
         if kb.is_modifier(event_name) or event.event_type == "up":
@@ -26,6 +28,7 @@ class Handler:
         if layout != "EN" and not has_mods:
             keys.append(f"|{layout}")
         self.reporter.report(keys)
+        self.set_release_win()
 
     def start(self):
         while not self.stopping:
@@ -37,3 +40,12 @@ class Handler:
 
     def stop(self):
         self.stopping = True
+
+    def set_release_win(self):
+        if kb.is_pressed("windows"):
+            threading.Timer(5, self.release_win).start()
+
+    def release_win(self):
+        kb.release('windows')
+        kb.release('left windows')
+        kb.release('right windows')
