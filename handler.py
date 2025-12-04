@@ -43,9 +43,15 @@ class Handler:
 
     def set_release_win(self):
         if kb.is_pressed("windows"):
-            threading.Timer(5, self.release_win).start()
+            self.log.info("Win release set")
+            threading.Timer(2, self.release_win).start()
 
     def release_win(self):
-        kb.release('windows')
-        kb.release('left windows')
-        kb.release('right windows')
+        try:
+            kb.release('windows')
+            kb.release('left windows')
+            kb.release('right windows')
+            kb._pressed_events.pop(91, None)
+            self.log.info("Win released")
+        except Exception as e:
+            self.log.error(e)
