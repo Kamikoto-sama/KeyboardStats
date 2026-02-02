@@ -54,7 +54,7 @@ class Reporter(Thread):
         self.chords_stat["$ts"] = f"{datetime.datetime.now().time()}"
         try:
             with open(self.get_filename(), "w") as f:
-                data = json.dumps(self.chords_stat)
+                data = json.dumps(self.chords_stat, sort_keys=True)
                 f.write(data)
         except Exception as e:
             self.log.error(e)
